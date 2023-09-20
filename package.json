@@ -1,0 +1,30 @@
+{
+  "name": "blockdoc",
+  "version": "1.0.0",
+  "description": "A blockchain based e-vault",
+  "main": "server.js",
+  "scripts": {
+    "test": "npx nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viperadnan-git/blockdoc.git"
+  },
+  "keywords": [
+    "blockchain",
+    "evault"
+  ],
+  "author": "TeamName <team@email.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/viperadnan-git/blockdoc/issues"
+  },
+  "homepage": "https://github.com/viperadnan-git/blockdoc#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "sequelize": "^6.33.0",
+    "toml": "^3.0.0"
+  }
+}
