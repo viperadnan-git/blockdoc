@@ -46,6 +46,18 @@ class DocumentRegistryClient {
     }
 }
 
+function createNewWalletAndReturnPrivateKeyAndAddress() {
+    const wallet = ethers.Wallet.createRandom();
+    return {
+        privateKey: wallet.privateKey,
+        address: wallet.address
+    }
+}
+
+function getAddressFromPrivateKey(privateKey) {
+    const wallet = new ethers.Wallet(privateKey);
+    return wallet.address;
+}
 
 // example usage
 async function main(){
