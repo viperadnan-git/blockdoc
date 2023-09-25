@@ -1,27 +1,33 @@
 const router = require('express').Router();
 const multer = require('multer');
 const path = require('path');
-
 const db = require('../../database');
+const loginRequired = require('./middlewares/login.required');
+
+
+router.use(loginRequired);
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../../uploads'));
+        cb(null, path.join(process.cwd(), './uploads'));
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
     },
 });
 
+
 router.post('/upload', multer({ storage }).single('file'), async (req, res) => {
     const { file } = req;
-    const { title, description } = req.body;
+    const { doc_type, doc_id } = req.body;
     const { id: user_id } = req.user;
     const document = await db.Document.create({
-        title,
-        description,
-        file_path: file.path,
+        doc_id,
+        doc_type,
         user_id,
+        path: file.path,
     });
-    res.send(document);
+    res.status(201).json(document);
 });
+
+module.exports = router;

@@ -15,6 +15,7 @@ User.hasMany(Document, {
 
 const db = {
     User,
+    Document,
     sequelize,
     Sequelize,
 };

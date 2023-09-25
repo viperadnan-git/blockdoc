@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const db = require('../../database');
+const db = require('../../../database');
+const config = require('../../../config');
 
 module.exports = (req, res, next) => {
     // req.headers must have authorization header set with JWT token
@@ -15,7 +16,7 @@ module.exports = (req, res, next) => {
 
     const token = token_bearer[1];
 
-    return jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    return jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
             return res.status(401).send({ code: 401, message: 'Failed to authenticate.' });
         }

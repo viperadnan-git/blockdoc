@@ -2,13 +2,11 @@ const {ethers} = require('ethers');
 const fs = require('fs');
 const {abi} = require('./engine.json');
 
-require('dotenv').config(); 
+const config = require('../config');
 
 // const web3 = new Web3(process.env.RPC_URL);
-const CONTRACTADDRESS = process.env.CONTRACT_ADDRESS;
-const OWNERADDRESS = process.env.OWNER_ADDRESS;
-const RPC_URL = process.env.RPC_URL;
-const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
+const CONTRACTADDRESS = config.contract.address;
+const RPC_URL = config.contract.rpc_url;
 
 
 class DocumentRegistryClient {

@@ -7,16 +7,20 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        title: {
-            type: DataTypes.TEXT,
+        doc_type: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
-        path: {
-            type: DataTypes.TEXT,
+        doc_id: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
         user: {
             type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        path: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
     }, {

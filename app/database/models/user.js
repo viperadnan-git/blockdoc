@@ -33,6 +33,11 @@ module.exports = (sequelize) => {
                 this.setDataValue('name', value.trim());
             },
         },
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 'user',
+        },
         private_key: {
             type: DataTypes.STRING,
             allowNull: false,
