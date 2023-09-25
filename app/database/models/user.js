@@ -20,7 +20,7 @@ module.exports = (sequelize) => {
             allowNull: false,
         },
         email: {
-            type: DataTypes.STRING(320),
+            type: DataTypes.STRING,
             allowNull: false,
             unique: true,
             set (value) {
@@ -28,20 +28,22 @@ module.exports = (sequelize) => {
             },
         },
         name: {
-            type: DataTypes.VIRTUAL,
+            type: DataTypes.STRING,
             set (value) {
                 this.setDataValue('name', value.trim());
             },
         },
         private_key: {
-            type: DataTypes.STRING(64),
+            type: DataTypes.STRING,
             allowNull: false,
         },
         // metamask address
         public_key: {
-            type: DataTypes.STRING(64),
+            type: DataTypes.STRING,
             allowNull: false,
         },
+    }, {
+        underscored: true,
     });
 
     return User;

@@ -44,27 +44,20 @@ class DocumentRegistryClient {
         await tx.wait();
         return tx.hash;
     }
-}
-
-function createNewWalletAndReturnPrivateKeyAndAddress() {
-    const wallet = ethers.Wallet.createRandom();
-    return {
-        privateKey: wallet.privateKey,
-        address: wallet.address
+    
+    static createNewWalletAndReturnPrivateKeyAndAddress() {
+        const wallet = ethers.Wallet.createRandom();
+        return {
+            privateKey: wallet.privateKey,
+            address: wallet.address
+        }
+    }
+    
+    static getAddressFromPrivateKey(privateKey) {
+        const wallet = new ethers.Wallet(privateKey);
+        return wallet.address;
     }
 }
 
-function getAddressFromPrivateKey(privateKey) {
-    const wallet = new ethers.Wallet(privateKey);
-    return wallet.address;
-}
 
-// example usage
-async function main(){
-    const documentRegistry = new DocumentRegistryClient();
-    const storeDocument = await documentRegistry.storeDocument("1", "1", "1", OWNERADDRESS);
-    const ids = await documentRegistry.searchDocumentByDocIdAndType("1", "1");
-    console.log(ids);
-}
-
-main();
+module.exports = DocumentRegistryClient;
