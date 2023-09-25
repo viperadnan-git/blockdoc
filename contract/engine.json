@@ -49,12 +49,27 @@
 					"type": "string"
 				}
 			],
-			"name": "fetchDocumentHashById",
+			"name": "fetchDocumentById",
 			"outputs": [
 				{
 					"internalType": "string",
 					"name": "",
 					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
 				}
 			],
 			"stateMutability": "view",
@@ -122,6 +137,11 @@
 				{
 					"internalType": "address",
 					"name": "_owner",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_assignee",
 					"type": "address"
 				}
 			],

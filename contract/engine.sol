@@ -8,6 +8,7 @@ contract DocumentRegistry {
         string docType;
         string contentHash;
         address owner;
+        address assignee;
     }
 
     mapping(string => Document) private documents;
@@ -26,12 +27,14 @@ contract DocumentRegistry {
         string memory _docID,
         string memory _docType,
         string memory _contentHash,
-        address _owner
+        address _owner,
+        address _assignee
     ) external {
         documents[_docID] = Document({
             docType: _docType,
             contentHash: _contentHash,
-            owner: _owner
+            owner: _owner,
+            assignee: _assignee
         });
 
         documentsCreatedByUser[_owner].push(_docID);
@@ -45,10 +48,10 @@ contract DocumentRegistry {
         return documentsCreatedByUser[msg.sender];
     }
 
-    function fetchDocumentHashById(string memory _docId) external view returns (string memory){
+    function fetchDocumentById(string memory _docId) external view returns (string memory, string memory, address, address) {
         Document storage doc = documents[_docId];
         require(doc.owner == msg.sender, "You don't own this document");
-        return doc.contentHash;
+        return (doc.docType, doc.contentHash, doc.owner, doc.assignee);
     }
 
     function searchDocumentByDocIdAndType(string memory _docID, string memory _docType)
