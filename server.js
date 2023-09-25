@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const db = require('./app/database');
 
 const app = express();
 app.use(cors());
@@ -9,7 +10,10 @@ const host = process.env.HOST || '0.0.0.0';
 
 app.use(require('./app/routes'));
 
-app.listen(port, host, () => {
-    console.log(`Server running on port ${port}`);
-}
-);
+db.sequelize.sync().then(() => {
+    console.log('Database connected');
+    app.listen(port, host, () => {
+        console.log(`Server running on port ${port}`);
+    }
+    );
+});

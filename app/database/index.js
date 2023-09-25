@@ -1,17 +1,23 @@
-const User = require('./models/user');
-
 const { Sequelize } = require('sequelize');
 const config = require('../config');
-
-const db = {};
 
 const sequelize = new Sequelize({
     ...config.database,
 });
 
-const User = User(sequelize);
+const User = require('./models/User')(sequelize);
+const Document = require('./models/Document')(sequelize);
 
-db.sequelize = sequelize;
-db.User = User;
+User.hasMany(Document, {
+    foreignKey: 'user',
+    as: 'documents',
+});
+
+const db = {
+    User,
+    Document,
+    sequelize,
+    Sequelize,
+};
 
 module.exports = db;

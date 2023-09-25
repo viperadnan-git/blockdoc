@@ -2,43 +2,53 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
     const User = sequelize.define('user', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
         username: {
             type: DataTypes.STRING(16),
             allowNull: false,
             unique: true,
+            set (value) {
+                this.setDataValue('username', value.trim().toLowerCase());
+            },
         },
-        passwordHash: {
+        password_hash: {
             type: DataTypes.STRING,
             allowNull: false,
         },
         email: {
-            type: DataTypes.STRING(320),
+            type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-        },
-        firstName: {
-            type: DataTypes.STRING(32),
-            allowNull: false,
-        },
-        lastName: {
-            type: DataTypes.STRING(32),
-            allowNull: false,
-        },
-        fullName: {
-            type: DataTypes.VIRTUAL,
-            get() {
-                return `${this.firstName} ${this.lastName}`;
+            set (value) {
+                this.setDataValue('email', value.trim().toLowerCase());
             },
         },
-        privateKey: {
-            type: DataTypes.STRING(64),
+        name: {
+            type: DataTypes.STRING,
+            set (value) {
+                this.setDataValue('name', value.trim());
+            },
+        },
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 'user',
+        },
+        private_key: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
         // metamask address
-        publicKey: {
-            type: DataTypes.STRING(64),
+        public_key: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
+    }, {
+        underscored: true,
     });
 
     return User;
