@@ -1,0 +1,155 @@
+{
+	"abi": [
+		{
+			"inputs": [],
+			"stateMutability": "nonpayable",
+			"type": "constructor"
+		},
+		{
+			"inputs": [],
+			"name": "admin",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_docID",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_newDocType",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_newContentHash",
+					"type": "string"
+				}
+			],
+			"name": "editDocument",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_docId",
+					"type": "string"
+				}
+			],
+			"name": "fetchDocumentById",
+			"outputs": [
+				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "fetchMyIds",
+			"outputs": [
+				{
+					"internalType": "string[]",
+					"name": "",
+					"type": "string[]"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_docID",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_docType",
+					"type": "string"
+				}
+			],
+			"name": "searchDocumentByDocIdAndType",
+			"outputs": [
+				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_docID",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_docType",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_contentHash",
+					"type": "string"
+				},
+				{
+					"internalType": "address",
+					"name": "_owner",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_assignee",
+					"type": "address"
+				}
+			],
+			"name": "storeDocument",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}
+
