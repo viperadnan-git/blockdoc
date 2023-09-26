@@ -88,6 +88,14 @@ class DocumentRegistryClient {
         const wallet = new ethers.Wallet(privateKey);
         return wallet.address;
     }
+
+    async shareUserAccess(contentHash, toAddress, privateKey) {
+        const wallet = new ethers.Wallet(privateKey);
+        const contract = new ethers.Contract(this.contractAddress, abi, wallet);
+        const tx = await contract.shareUserAccess(contentHash, toAddress);
+        await tx.wait();
+        return tx.hash;
+    }    
 }
 
 module.exports = new DocumentRegistryClient;
