@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const DocumentRegistryClient = require('../../contract');
+const contract = require('../../contract');
 
 const { Op } = require('sequelize');
 const db = require('../../database');
@@ -45,6 +45,7 @@ router.post('/signup', signupValidate, async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const { privateKey: private_key, address: public_key } = DocumentRegistryClient.createNewWalletAndReturnPrivateKeyAndAddress();
+    await contract.createUser(username  , public_key);
     await db.User.create({
         username,
         name,

@@ -58,7 +58,7 @@ class DocumentRegistryClient {
         return tx.hash;
     }
 
-    static createNewWalletAndReturnPrivateKeyAndAddress() {
+    createWallet() {
         const wallet = ethers.Wallet.createRandom();
         return {
             privateKey: wallet.privateKey,
@@ -66,10 +66,10 @@ class DocumentRegistryClient {
         }
     }
     
-    static getAddressFromPrivateKey(privateKey) {
+    getAddressFromPrivateKey(privateKey) {
         const wallet = new ethers.Wallet(privateKey);
         return wallet.address;
     }
 }
 
-module.exports = DocumentRegistryClient;
+module.exports = new DocumentRegistryClient;
