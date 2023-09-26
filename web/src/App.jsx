@@ -1,29 +1,27 @@
-import { BrowserRouter, Link, Route, Router, Routes } from "react-router-dom";
-import { Auth } from "../components/Auth";
-import { Def } from "../components/Def";
-import Navbar from "../components/Navbar";
-import "./index.css";
-import Sidebar from "../components/SideBar";
-import { MainS } from "../components/SubComponents/mainMenu";
-import { Drive } from "../components/SubComponents/Drive";
-import { Documents } from "../components/SubComponents/Documents";
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+
+import Dashboard from './components/Dashboard';
+import Footer from './components/Footer';
+import Home from './components/Home';
+import Login from './components/Login';
+import Navbar from './components/Navbar';
+import Signup from './components/Signup';
+import UploadDocument from './components/UploadDocument';
 
 function App() {
   return (
-    <>
+    <Router>
       <Navbar />
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Def />} />
-          <Route path='/Auth' element={<Auth />} />
-          <Route path='/Home' element={<Sidebar />}>
-            <Route path='' element={<MainS />} />
-            <Route path='Drive' element={<Drive />} />
-            <Route path='Documents' element={<Documents />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+      <Routes>
+        <Route exact path="/" element={<Home/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<Signup/>} />
+        {/* nested routes */}
+        <Route path="/dash" element={<Dashboard/>}/>
+          <Route path="/dash/upload" element={<UploadDocument/>} />
+      </Routes>
+      <Footer/>
+    </Router>
   );
 }
 

@@ -13,14 +13,15 @@ const multer = require('multer');
 router.use(multer().any());
 
 router.post('/login', loginValidate, async (req, res) => {
-    const { email, username, password } = req.body;
+    const { email, password } = req.body;
 
     let user;
-    if (email) {
+    if (email.includes('@')) {
         user = await db.User.findOne({ where: { email } });
-    } else {
-        user = await db.User.findOne({ where: { username } });
     }
+    else {
+        user = await db.User.findOne({ where: { username: email } });
+    };
 
     if (!user) {
         return res.status(404).send({ code: 404, message: 'User not found' });
@@ -39,14 +40,14 @@ router.post('/login', loginValidate, async (req, res) => {
         address: user.public_key,
         private_key: user.private_key,
     }, config.jwt.secret, { expiresIn: config.jwt.expires_in });
-    res.send({ token });
+    res.send({ code: 200, token });
 });
 
 router.post('/signup', signupValidate, async (req, res) => {
     const { username, name, email, password } = req.body;
     const user = await db.User.findOne({ where: { [Op.or]: [{ username }, { email }] } });
     if (user) {
-        return res.status(409).send({ message: 'Username or Email already exists' });
+        return res.status(400).send({ code: 400, message: 'Username or Email already exists' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const { privateKey: private_key, address: public_key } = contract.createWallet();
@@ -59,7 +60,7 @@ router.post('/signup', signupValidate, async (req, res) => {
         public_key,
     });
     await contract.createUser(username, public_key);
-    res.status(201).send();
+    res.status(200).json({ code: 200, message: 'User created' })
 });
 
 module.exports = router;

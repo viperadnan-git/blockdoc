@@ -28,7 +28,6 @@ router.post('/upload', multer({ storage }).single('file'), async (req, res) => {
         user_id,
         path: file.path,
     });
-    console.log(doc_id, doc_type, docHash, req.user.address, (owner || req.user.address));
     await contract.storeDocument(doc_id, doc_type, docHash, req.user.address, (owner || req.user.address));
     res.status(201).send();
 });
@@ -48,6 +47,17 @@ router.get('/list', async (req, res) => {
         });
     };
     res.send(documents);
+});
+
+router.get('/file/:hash', async (req, res) => {
+    const { hash } = req.params;
+    // return the physical file
+    const document = await db.Document.findOne({ where: { contentHash: hash, user_id: req.user.id } });
+    if (!document) {
+        return res.status(404).send({ code: 404, message: 'Document not found' });
+    }
+
+    res.sendFile(document.path);
 });
 
 module.exports = router;

@@ -1,23 +1,18 @@
-const fs = require('fs');
 const crypto = require('crypto');
+const fs = require('fs');
 
 class FileHasher {
-    constructor() {
-        this.algorithm = 'sha256';
-        this.encoding = 'hex';
-    }
-
     async hash(filePath) {
-        const hash = crypto.createHash(this.algorithm);
+        const hash = crypto.createHash('sha1');
         const stream = fs.createReadStream(filePath);
 
-        stream.on('data', (data) => {
-            hash.update(data);
-        });
-
         return new Promise((resolve, reject) => {
+            stream.on('data', (data) => {
+                hash.update(data);
+            });
+
             stream.on('end', () => {
-                const fileHash = hash.digest(this.encoding);
+                const fileHash = hash.digest('hex');
                 resolve(fileHash);
             });
 

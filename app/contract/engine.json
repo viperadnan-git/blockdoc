@@ -131,6 +131,11 @@
 					"type": "string"
 				},
 				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
+				},
+				{
 					"internalType": "address",
 					"name": "",
 					"type": "address"
@@ -160,22 +165,32 @@
 		{
 			"inputs": [
 				{
+					"internalType": "address",
+					"name": "_addr",
+					"type": "address"
+				}
+			],
+			"name": "getUser",
+			"outputs": [
+				{
 					"internalType": "string",
-					"name": "_docType",
+					"name": "",
 					"type": "string"
 				},
 				{
-					"internalType": "string",
-					"name": "_contentHash",
-					"type": "string"
-				}
-			],
-			"name": "searchDocumentByDocIdAndType",
-			"outputs": [
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
 				{
 					"internalType": "bool",
 					"name": "",
 					"type": "bool"
+				},
+				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
 				}
 			],
 			"stateMutability": "view",
