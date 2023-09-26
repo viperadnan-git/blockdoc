@@ -8,6 +8,9 @@ const db = require('../../database');
 const loginValidate = require('./middlewares/login.validate');
 const signupValidate = require('./middlewares/signup.validate');
 const config = require('../../config');
+const multer = require('multer');
+
+router.use(multer().any());
 
 router.post('/login', loginValidate, async (req, res) => {
     const { email, username, password } = req.body;
@@ -33,6 +36,8 @@ router.post('/login', loginValidate, async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        address: user.public_key,
+        private_key: user.private_key,
     }, config.jwt.secret, { expiresIn: config.jwt.expires_in });
     res.send({ token });
 });
@@ -41,7 +46,7 @@ router.post('/signup', signupValidate, async (req, res) => {
     const { username, name, email, password } = req.body;
     const user = await db.User.findOne({ where: { [Op.or]: [{ username }, { email }] } });
     if (user) {
-        return res.status(409).send({ message: 'User already exists' });
+        return res.status(409).send({ message: 'Username or Email already exists' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const { privateKey: private_key, address: public_key } = contract.createWallet();

@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 
 router.post('/upload', multer({ storage }).single('file'), async (req, res) => {
     const { file } = req;
-    const { doc_type, doc_id } = req.body;
+    const { doc_type, doc_id, owner } = req.body;
     const { id: user_id } = req.user;
     const docHash = await fileHasher.hash(file.path);
     await db.Document.create({
@@ -28,15 +28,25 @@ router.post('/upload', multer({ storage }).single('file'), async (req, res) => {
         user_id,
         path: file.path,
     });
-
-
-    res.status(201);
+    console.log(doc_id, doc_type, docHash, req.user.address, (owner || req.user.address));
+    await contract.storeDocument(doc_id, doc_type, docHash, req.user.address, (owner || req.user.address));
+    res.status(201).send();
 });
 
 router.get('/list', async (req, res) => {
-    const { id: user_id } = req.user;
-    awa
-    const documents = await db.Document.findAll({ where: { user_id } });
+    const docs = await contract.fetchMyIds(req.user.private_key);
+    const documents = [];
+    for (let i = 0; i < docs.length; i++) {
+        const doc = await contract.fetchDocumentById(docs[i], req.user.private_key);
+        const { docId, docType, contentHash, owner, creator } = doc;
+        documents.push({
+            docId,
+            docType,
+            contentHash,
+            owner,
+            creator,
+        });
+    };
     res.send(documents);
 });
 

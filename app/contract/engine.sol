@@ -5,6 +5,7 @@ contract DocumentRegistry {
     address public admin;
 
     struct Document {
+        string docId;
         string docType;
         string contentHash;
         address owner;
@@ -31,6 +32,11 @@ contract DocumentRegistry {
         admin = msg.sender;
     }
 
+    function getUser(address _addr) external view returns (string memory, address, bool, string memory) {
+        User storage user = users[_addr];
+        return (user.name, user.addr, user.verified, user.role);
+    }
+
     function storeDocument(
         string memory _docID,
         string memory _docType,
@@ -40,60 +46,51 @@ contract DocumentRegistry {
     ) external {
         require(users[_owner].addr == _owner, "Owner doesn't exist");
         require(users[_creator].addr == _creator, "Creator doesn't exist");
+        
+        require(bytes(documents[_contentHash].contentHash).length == 0, "Document already exists");
+
         documents[_contentHash] = Document({
+            docId: _docID,
             docType: _docType,
             contentHash: _contentHash,
             owner: _owner,
             creator: _creator
         });
 
-        if(_owner == _creator){
-            documentsCreatedByUser[_owner].push(_docID);
-        }else {
-            documentsCreatedByUser[_owner].push(_docID);
-            documentsCreatedByUser[_creator].push(_docID);
+        documentsCreatedByUser[_owner].push(_contentHash);
+
+        if (_owner != _creator) {
+            documentsCreatedByUser[_creator].push(_contentHash);
         }
     }
 
-    function fetchMyIds()
-        external
-        view
-        returns (string[] memory)
-    {
+    function fetchMyIds() external view returns (string[] memory) {
         return documentsCreatedByUser[msg.sender];
     }
 
-    function fetchDocumentById(string memory _contentHash) external view returns (string memory, string memory, address, address) {
+    function fetchDocumentById(string memory _contentHash) external view returns (string memory, string memory, string memory, address, address) {
         Document storage doc = documents[_contentHash];
-        require(doc.owner == msg.sender, "You don't own this document");
-        return (doc.docType, doc.contentHash, doc.owner, doc.creator);
+        require(bytes(doc.contentHash).length > 0, "Document not found");
+        require(doc.owner == msg.sender || doc.creator == msg.sender, "You don't have permission for this document");
+        return (doc.docId, doc.docType, doc.contentHash, doc.owner, doc.creator);
     }
 
-    function searchDocumentByDocIdAndType(string memory _docType, string memory _contentHash) external view returns (bool) {
+    function editDocument(
+        string memory _contentHash,
+        string memory _newDocType,
+        string memory _newContentHash
+    ) external {
         Document storage doc = documents[_contentHash];
-        if (
-            keccak256(abi.encodePacked(doc.docType)) == keccak256(abi.encodePacked(_docType)) &&
-            keccak256(abi.encodePacked(doc.contentHash)) == keccak256(abi.encodePacked(_contentHash))
-        ) {
-            return true;
-        }
-        
-        return false; 
-    }
-
-    function editDocument(string memory _contentHash, string memory _newDocType, string memory _newContentHash)
-        external
-    {
-        Document storage doc = documents[_contentHash];
+        require(bytes(doc.contentHash).length > 0, "Document not found");
         require(doc.owner == msg.sender, "You don't own this document and can't edit");
+
         doc.docType = _newDocType;
         doc.contentHash = _newContentHash;
     }
 
     function createUser(string memory _name, address _addr) external onlyAdmin {
-        // check if the user already exist
-        require(users[_addr].addr != _addr, "user with this address already exist");
-        // create user
+        require(users[_addr].addr == address(0), "User with this address already exists");
+
         users[_addr] = User({
             name: _name,
             addr: _addr,
@@ -104,7 +101,8 @@ contract DocumentRegistry {
 
     function grantRole(address _userAddr, string memory _roleType) external onlyAdmin {
         User storage user = users[_userAddr];
-        require(user.addr == _userAddr, "User doesn't exist");
+        require(user.addr != address(0), "User doesn't exist");
         user.role = _roleType;
+        user.verified = true;
     }
 }

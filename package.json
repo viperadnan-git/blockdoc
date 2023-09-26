@@ -4,7 +4,7 @@
   "description": "A blockchain based e-vault",
   "main": "server.js",
   "scripts": {
-    "test": "npx nodemon server.js",
+    "test": "npx nodemon server.js --ignore uploads/",
     "start": "node server.js"
   },
   "repository": {

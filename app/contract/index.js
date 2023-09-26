@@ -33,9 +33,10 @@ class DocumentRegistryClient {
     async fetchDocumentById(contentHash, privateKey) {
         const wallet = new ethers.Wallet(privateKey, this.provider);
         const contract = new ethers.Contract(this.contractAddress, abi, wallet);
-        const document = await contract.fetchDocumentById(contentHash);
-        const [docType, _contentHash, owner, creator] = document;
-        return { docType, contentHash:_contentHash, owner, creator };
+        
+        const document = contract.fetchDocumentById(contentHash);
+        console.log(document);
+        return document;
     }    
 
     async searchDocumentByDocIdAndType(docType, contentHash) {
