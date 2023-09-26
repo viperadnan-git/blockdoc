@@ -45,6 +45,16 @@ class DocumentRegistryClient {
         await tx.wait();
         return tx.hash;
     }
-}
 
-module.export = DocumentRegistryClient;
+    async createUser(name, addr) {
+        const tx = await this.contract.createUser(name, addr);
+        await tx.wait();
+        return tx.hash;
+    }
+
+    async grantRole(userAddr, roleType) {
+        const tx = await this.contract.grantRole(userAddr, roleType);
+        await tx.wait();
+        return tx.hash;
+    }
+}
