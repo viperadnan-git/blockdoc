@@ -7,11 +7,7 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        doc_type: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        doc_id: {
+        contentHash: {
             type: DataTypes.STRING,
             allowNull: false,
         },

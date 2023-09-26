@@ -44,8 +44,7 @@ router.post('/signup', signupValidate, async (req, res) => {
         return res.status(409).send({ message: 'User already exists' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const { privateKey: private_key, address: public_key } = DocumentRegistryClient.createNewWalletAndReturnPrivateKeyAndAddress();
-    await contract.createUser(username  , public_key);
+    const { privateKey: private_key, address: public_key } = contract.createWallet();
     await db.User.create({
         username,
         name,
@@ -54,6 +53,7 @@ router.post('/signup', signupValidate, async (req, res) => {
         private_key,
         public_key,
     });
+    await contract.createUser(username, public_key);
     res.status(201).send();
 });
 

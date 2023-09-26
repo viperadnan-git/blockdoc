@@ -37,4 +37,4 @@ class FileHasher {
     }
 }
 
-module.exports = FileHasher;
+module.exports = new FileHasher();
