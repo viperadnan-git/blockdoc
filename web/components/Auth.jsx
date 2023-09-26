@@ -22,11 +22,64 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
+
 export const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [activeTabIndex, setactiveTabIndex] = useState(0);
 
-  // const [date, setDate] = useState(new Date());
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleNameChange(e) {
+    setName(e.target.value);
+  }
+  function handleSurnameChange(e) {
+    setSurname(e.target.value);
+  }
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+  }
+  function handlePasswordChange(e) {
+    setPassword(e.target.value);
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Create an object with the user data
+    const userData = {
+      name,
+      username: name + surname,
+      email,
+      password,
+    };
+  
+    const apiUrl = 'http://localhost:3001/api/signup';
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      if (response.status === 200) {
+        console.log('Signup successful!');
+        // Redirect the user to the login page
+        
+      } else {
+        console.error('Signup failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
+
   return (
     <Tabs align='center' index={activeTabIndex} onChange={(index) => setactiveTabIndex(index)}>
       <TabList>
@@ -48,13 +101,13 @@ export const Auth = () => {
                     <Box>
                       <FormControl id='firstName' isRequired>
                         <FormLabel>First Name</FormLabel>
-                        <Input type='text' />
+                        <Input type='text' value={name} onChange={handleNameChange}/>
                       </FormControl>
                     </Box>
                     <Box>
                       <FormControl id='lastName'>
                         <FormLabel>Last Name</FormLabel>
-                        <Input type='text' />
+                        <Input type='text' value={surname} onChange={handleSurnameChange}/>
                       </FormControl>
                     </Box>
                   </HStack>
@@ -70,7 +123,7 @@ export const Auth = () => {
                   </RadioGroup> */}
                   <FormControl id='email' isRequired>
                     <FormLabel>Email address</FormLabel>
-                    <Input type='email' />
+                    <Input type='email' value={email} onChange={handleEmailChange}/>
                   </FormControl>
                   {/* <FormControl id='dob' isRequired>
                     <FormLabel>Date of birth</FormLabel>
@@ -79,7 +132,7 @@ export const Auth = () => {
                   <FormControl id='Password' isRequired>
                     <FormLabel>Password</FormLabel>
                     <InputGroup>
-                      <Input type={showPassword ? "text" : "password"} />
+                      <Input type={showPassword ? "text" : "password"} value={password} onChange={handlePasswordChange}/>
                       <InputRightElement h={"full"}>
                         <Button variant={"ghost"} onClick={() => setShowPassword((showPassword) => !showPassword)}>
                           {showPassword ? <ViewIcon /> : <ViewOffIcon />}
@@ -93,6 +146,7 @@ export const Auth = () => {
                       size='lg'
                       bg={"blue.400"}
                       color={"white"}
+                      onClick={handleSubmit}
                       _hover={{
                         bg: "blue.500",
                       }}>
