@@ -11,8 +11,16 @@ contract DocumentRegistry {
         address assignee;
     }
 
+    struct User {
+        string name;
+        address addr;
+        bool verified;
+        string role;
+    }
+
     mapping(string => Document) private documents;
     mapping(address => string[]) private documentsCreatedByUser;
+    mapping(address => User) private users;
 
     modifier onlyAdmin() {
         require(msg.sender == admin, "Only admin can perform this operation");
@@ -37,7 +45,12 @@ contract DocumentRegistry {
             assignee: _assignee
         });
 
-        documentsCreatedByUser[_owner].push(_docID);
+        if(_owner == _assignee){
+            documentsCreatedByUser[_owner].push(_docID);
+        }else {
+            documentsCreatedByUser[_owner].push(_docID);
+            documentsCreatedByUser[_assignee].push(_docID);
+        }
     }
 
     function fetchMyIds()
@@ -54,14 +67,16 @@ contract DocumentRegistry {
         return (doc.docType, doc.contentHash, doc.owner, doc.assignee);
     }
 
-    function searchDocumentByDocIdAndType(string memory _docID, string memory _docType)
-        external
-        view
-        returns (string memory, address)
-    {
+    function searchDocumentByDocIdAndType(string memory _docID, string memory _docType, string memory _contentHash) external view returns (bool) {
         Document storage doc = documents[_docID];
-        require(keccak256(abi.encodePacked(doc.docType)) == keccak256(abi.encodePacked(_docType)), "Document type mismatch");
-        return (doc.docType, doc.owner);
+        if (
+            keccak256(abi.encodePacked(doc.docType)) == keccak256(abi.encodePacked(_docType)) &&
+            keccak256(abi.encodePacked(doc.contentHash)) == keccak256(abi.encodePacked(_contentHash))
+        ) {
+            return true;
+        }
+        
+        return false; 
     }
 
     function editDocument(string memory _docID, string memory _newDocType, string memory _newContentHash)
@@ -71,5 +86,23 @@ contract DocumentRegistry {
         require(doc.owner == msg.sender, "You don't own this document and can't edit");
         doc.docType = _newDocType;
         doc.contentHash = _newContentHash;
+    }
+
+    function createUser(string memory _name, address _addr) external onlyAdmin {
+        // check if the user already exist
+        require(users[_addr].addr != _addr, "user with this address already exist");
+        // create user
+        users[_addr] = User({
+            name: _name,
+            addr: _addr,
+            verified: false,
+            role: "User"
+        });
+    }
+
+    function grantRole(address _userAddr, string memory _roleType) external onlyAdmin {
+        User storage user = users[_userAddr];
+        require(user.addr == _userAddr, "User doesn't exist");
+        user.role = _roleType;
     }
 }
