@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const db = require('../../database');
 const loginRequired = require('./middlewares/login.required');
-
+const contract = require('../../contract');
 
 router.use(loginRequired);
 
