@@ -23,14 +23,17 @@ class DocumentRegistryClient {
         return tx.hash;
     }
 
-    async fetchMyIds() {
-        const ids = await this.contract.fetchMyIds();
+    async fetchMyIds(privateKey) {
+        const wallet = new ethers.Wallet(privateKey, this.provider);
+        const contract = new ethers.Contract(this.contractAddress, abi, wallet);
+        const ids = await contract.fetchMyIds();
         return ids;
     }
 
-    async fetchDocumentById(docID) {
-        const document = await this.contract.fetchDocumentById(docID);
-        // Parse the result into meaningful fields (assuming you want to use them)
+    async fetchDocumentById(docID, privateKey) {
+        const wallet = new ethers.Wallet(privateKey, this.provider);
+        const contract = new ethers.Contract(this.contractAddress, abi, wallet);
+        const document = await contract.fetchDocumentById(docID);
         const [docType, contentHash, owner, assignee] = document;
         return { docType, contentHash, owner, assignee };
     }
