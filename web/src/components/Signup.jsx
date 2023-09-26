@@ -54,6 +54,7 @@ function Signup() {
                         duration: 9000,
                         isClosable: true,
                     });
+                    window.location.href = "/login";
                 }
             })
             .catch((error) => {

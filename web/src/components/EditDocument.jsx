@@ -20,11 +20,9 @@ import {
 
 import { useState } from "react";
 
-function UploadDocument({ isOpen, onOpen, onClose }) {
+function EditDocument({ isOpen, onClose, hash }) {
     const [file, setFile] = useState(null);
-    const [docId, setDocId] = useState("");
     const [docType, setDocType] = useState("");
-    const [owner, setOwner] = useState("");
     const toast = useToast();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -32,16 +30,8 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
         setFile(event.target.files[0]);
     };
 
-    const handleDocIdChange = (event) => {
-        setDocId(event.target.value);
-    };
-
     const handleDocTypeChange = (event) => {
         setDocType(event.target.value);
-    };
-
-    const handleOwnerChange = (event) => {
-        setOwner(event.target.value);
     };
 
     const handleSubmit = (event) => {
@@ -49,13 +39,11 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
 
         const form = new FormData();
         form.append("file", file);
-        form.append("doc_id", docId);
         form.append("doc_type", docType);
-        owner && form.append("owner", owner);
 
         setIsLoading(true);
 
-        fetch("http://localhost:3001/api/doc/upload", {
+        fetch("http://localhost:3001/api/doc/edit/" + hash, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -92,7 +80,7 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
                 <ModalContent>
                     <ModalHeader>
                         <Heading as="h1" size="lg">
-                            Upload Document
+                            Edit Document
                         </Heading>
                     </ModalHeader>
                     <ModalCloseButton />
@@ -107,23 +95,15 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
                                     </Text>
                                 </FormControl>
                                 <FormControl isRequired>
-                                    <FormLabel>Document ID</FormLabel>
-                                    <Input type="text" value={docId} onChange={handleDocIdChange} />
-                                </FormControl>
-                                <FormControl isRequired>
                                     <FormLabel>Document Type</FormLabel>
                                     <Input type="text" value={docType} onChange={handleDocTypeChange} />
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel>Assign to</FormLabel>
-                                    <Input type="text" value={owner} onChange={handleOwnerChange} />
                                 </FormControl>
                             </Stack>
                         </form>
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="teal" mr={3} onClick={handleSubmit} isLoading={isLoading}>
-                            Upload
+                            Edit
                         </Button>
                         <Button variant="ghost" onClick={onClose}>
                             Cancel
@@ -135,4 +115,4 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
     );
 }
 
-export default UploadDocument;
+export default EditDocument;

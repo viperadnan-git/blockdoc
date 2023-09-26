@@ -20,42 +20,24 @@ import {
 
 import { useState } from "react";
 
-function UploadDocument({ isOpen, onOpen, onClose }) {
-    const [file, setFile] = useState(null);
-    const [docId, setDocId] = useState("");
-    const [docType, setDocType] = useState("");
-    const [owner, setOwner] = useState("");
+function ShareDocument({ isOpen, onClose, hash }) {
+    const [username, setUsername] = useState("");
     const toast = useToast();
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
-
-    const handleDocIdChange = (event) => {
-        setDocId(event.target.value);
-    };
-
-    const handleDocTypeChange = (event) => {
-        setDocType(event.target.value);
-    };
-
-    const handleOwnerChange = (event) => {
-        setOwner(event.target.value);
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         const form = new FormData();
-        form.append("file", file);
-        form.append("doc_id", docId);
-        form.append("doc_type", docType);
-        owner && form.append("owner", owner);
+        form.append("username", username);
 
         setIsLoading(true);
 
-        fetch("http://localhost:3001/api/doc/upload", {
+        fetch("http://localhost:3001/api/doc/share/" + hash, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -63,13 +45,13 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
             body: form,
         }).then((response) => {
             toast({
-                title: "Document uploaded",
-                description: "Your document has been uploaded successfully.",
+                title: "Document shared",
+                description: "Your document has been shared successfully.",
                 status: "success",
                 duration: 5000,
                 isClosable: true,
             });
-
+            
             onClose();
         }).catch((error) => {
             toast({
@@ -92,7 +74,7 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
                 <ModalContent>
                     <ModalHeader>
                         <Heading as="h1" size="lg">
-                            Upload Document
+                            Share Document
                         </Heading>
                     </ModalHeader>
                     <ModalCloseButton />
@@ -100,30 +82,15 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
                         <form onSubmit={handleSubmit}>
                             <Stack spacing={{ base: "4", md: "6", lg: "8" }}>
                                 <FormControl isRequired>
-                                    <FormLabel>File</FormLabel>
-                                    <Input type="file" onChange={handleFileChange} />
-                                    <Text fontSize="sm" color="gray.500">
-                                        Note: Maximum file size is 10MB.
-                                    </Text>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel>Document ID</FormLabel>
-                                    <Input type="text" value={docId} onChange={handleDocIdChange} />
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel>Document Type</FormLabel>
-                                    <Input type="text" value={docType} onChange={handleDocTypeChange} />
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel>Assign to</FormLabel>
-                                    <Input type="text" value={owner} onChange={handleOwnerChange} />
+                                    <FormLabel>Username of receiver</FormLabel>
+                                    <Input type="text" value={username} onChange={handleUsernameChange} />
                                 </FormControl>
                             </Stack>
                         </form>
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="teal" mr={3} onClick={handleSubmit} isLoading={isLoading}>
-                            Upload
+                            Share
                         </Button>
                         <Button variant="ghost" onClick={onClose}>
                             Cancel
@@ -135,4 +102,4 @@ function UploadDocument({ isOpen, onOpen, onClose }) {
     );
 }
 
-export default UploadDocument;
+export default ShareDocument;

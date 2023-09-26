@@ -40,7 +40,7 @@ function Login() {
                         duration: 9000,
                         isClosable: true,
                     });
-                    console.log(localStorage);
+                    window.location.href = "/dash";
                 }
             })
             .catch((error) => {

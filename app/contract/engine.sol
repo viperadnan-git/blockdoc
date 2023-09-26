@@ -37,6 +37,15 @@ contract DocumentRegistry {
         return (user.name, user.addr, user.verified, user.role);
     }
 
+    function shareUserAccess(string memory _contentHash, address _toAddress) external {
+        require(users[_toAddress].addr == _toAddress, "User not registered");
+    
+        Document storage doc = documents[_contentHash];
+        require(bytes(doc.contentHash).length > 0, "Document not found");
+        require(doc.owner == msg.sender, "You are not the owner of this document");
+        documentsCreatedByUser[_toAddress].push(_contentHash);
+    }
+
     function storeDocument(
         string memory _docID,
         string memory _docType,

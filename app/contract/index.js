@@ -68,6 +68,14 @@ class DocumentRegistryClient {
         return tx.hash;
     }
 
+    async shareUserAccess(contentHash, toAddress, privateKey) {
+        const wallet = new ethers.Wallet(privateKey);
+        const contract = new ethers.Contract(this.contractAddress, abi, wallet);
+        const tx = await contract.shareUserAccess(contentHash, toAddress);
+        await tx.wait();
+        return tx.hash;
+    }
+
     createWallet() {
         const wallet = ethers.Wallet.createRandom();
         return {

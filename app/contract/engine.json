@@ -63,6 +63,24 @@
 			"inputs": [
 				{
 					"internalType": "string",
+					"name": "_contentHash",
+					"type": "string"
+				},
+				{
+					"internalType": "address",
+					"name": "_toAddress",
+					"type": "address"
+				}
+			],
+			"name": "shareUserAccess",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
 					"name": "_docID",
 					"type": "string"
 				},

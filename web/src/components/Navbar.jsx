@@ -2,32 +2,41 @@ import { Box, Button, Collapse, Flex, HStack, Heading, Highlight, IconButton, Im
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 import { Link } from "react-router-dom";
-import useLogin from "../hooks/useLogin";
+import checkLogin from "../lib/checkLogin";
 
 function Navbar() {
     const { isOpen, onToggle } = useDisclosure();
-    const login = useLogin();
-    console.log(login);
+    const isLoggedIn = checkLogin();
+
+    const LogOut = () => {
+        localStorage.removeItem("token");
+        window.location.reload();
+    };
 
     return (
         <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-                <IconButton variant='ghost' size={"md"} icon={isOpen ? <CloseIcon fontSize={12}/> : <HamburgerIcon fontSize={24}/>} aria-label={"Open Menu"} display={{ md: "none" }} onClick={onToggle} />
+                <IconButton variant='ghost' size={"md"} icon={isOpen ? <CloseIcon fontSize={12}/> : <HamburgerIcon fontSize={24}/>} aria-label={"Open Menu"} display={isLoggedIn? { md: "none" } : "none"} onClick={onToggle} />
                 <HStack spacing={8} alignItems={"center"}>
-                    <Heading>
+                    <Heading as={Link} to="/">
                             BlockVault
                     </Heading>
-                    <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
+                    <HStack as={"nav"} spacing={4} display={isLoggedIn ? { base: "none", md: "flex" } : "none"}>
                         <Link to="/">Home</Link>
                         <Link to="/dash">Dashboard</Link>
                     </HStack>
                 </HStack>
-                <Flex alignItems={"center"} display={login ? "none": "flex"}>
+                <Flex alignItems={"center"} display={isLoggedIn ? "none": "flex"}>
                     <Button as={Link} to={"/login"} variant={"solid"} colorScheme={"teal"} size={"sm"} mr={4}>
                         Log in
                     </Button>
                     <Button as={Link} to={"/signup"} variant={"ghost"} size={"sm"}>
                         Sign up
+                    </Button>
+                </Flex>
+                <Flex alignItems={"center"} display={isLoggedIn ? "flex": "none"}>
+                    <Button onClick={LogOut} variant={"ghost"} colorScheme={"teal"} size={"sm"} mr={4}>
+                        Log out
                     </Button>
                 </Flex>
             </Flex>

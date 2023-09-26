@@ -18,7 +18,6 @@ function App() {
         <Route path="/signup" element={<Signup/>} />
         {/* nested routes */}
         <Route path="/dash" element={<Dashboard/>}/>
-          <Route path="/dash/upload" element={<UploadDocument/>} />
       </Routes>
       <Footer/>
     </Router>
