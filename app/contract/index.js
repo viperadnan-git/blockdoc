@@ -1,26 +1,24 @@
-const {ethers} = require('ethers');
+const { ethers } = require('ethers');
 const fs = require('fs');
-const {abi} = require('./engine.json');
+const { abi } = require('./engine.json');
 
-require('dotenv').config(); 
+const config = require('../config');
 
-// const web3 = new Web3(process.env.RPC_URL);
-const CONTRACTADDRESS = process.env.CONTRACT_ADDRESS;
-const OWNERADDRESS = process.env.OWNER_ADDRESS;
-const RPC_URL = process.env.RPC_URL;
-const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
-
+const CONTRACT_ADDRESS = config.contract.address;
+const OWNER_ADDRESS = config.contract.owner_address;
+const RPC_URL = config.contract.rpc_url;
+const OWNER_PRIVATE_KEY = config.contract.owner_private_key;
 
 class DocumentRegistryClient {
     constructor() {
-        this.contractAddress = CONTRACTADDRESS
+        this.contractAddress = CONTRACT_ADDRESS;
         this.provider = new ethers.JsonRpcProvider(RPC_URL);
         this.wallet = new ethers.Wallet(OWNER_PRIVATE_KEY, this.provider);
-        this.contract = new ethers.Contract(CONTRACTADDRESS, abi, this.wallet);
+        this.contract = new ethers.Contract(this.contractAddress, abi, this.wallet);
     }
 
-    async storeDocument(docID, docType, contentHash, owner) {
-        const tx = await this.contract.storeDocument(docID, docType, contentHash, owner);
+    async storeDocument(docID, docType, contentHash, creator, owner) {
+        const tx = await this.contract.storeDocument(docID, docType, contentHash, (owner && creator), creator);
         await tx.wait();
         return tx.hash;
     }
@@ -30,13 +28,16 @@ class DocumentRegistryClient {
         return ids;
     }
 
-    async fetchDocumentHashById(docID) {
-        const document_hash = await this.contract.fetchDocumentHashById(docID);
-        return document_hash;
+    async fetchDocumentById(docID) {
+        const document = await this.contract.fetchDocumentById(docID);
+        // Parse the result into meaningful fields (assuming you want to use them)
+        const [docType, contentHash, owner, assignee] = document;
+        return { docType, contentHash, owner, assignee };
     }
 
-    async searchDocumentByDocIdAndType(docID, docType) {
-        return this.contract.searchDocumentByDocIdAndType(docID, docType);
+    async searchDocumentByDocIdAndType(docID, docType, contentHash) {
+        const exists = await this.contract.searchDocumentByDocIdAndType(docID, docType, contentHash);
+        return exists;
     }
 
     async editDocument(docID, newDocType, newContentHash) {
@@ -44,27 +45,31 @@ class DocumentRegistryClient {
         await tx.wait();
         return tx.hash;
     }
-}
 
-function createNewWalletAndReturnPrivateKeyAndAddress() {
-    const wallet = ethers.Wallet.createRandom();
-    return {
-        privateKey: wallet.privateKey,
-        address: wallet.address
+    async createUser(name, addr) {
+        const tx = await this.contract.createUser(name, addr);
+        await tx.wait();
+        return tx.hash;
+    }
+
+    async grantRole(userAddr, roleType) {
+        const tx = await this.contract.grantRole(userAddr, roleType);
+        await tx.wait();
+        return tx.hash;
+    }
+
+    static createNewWalletAndReturnPrivateKeyAndAddress() {
+        const wallet = ethers.Wallet.createRandom();
+        return {
+            privateKey: wallet.privateKey,
+            address: wallet.address
+        }
+    }
+    
+    static getAddressFromPrivateKey(privateKey) {
+        const wallet = new ethers.Wallet(privateKey);
+        return wallet.address;
     }
 }
 
-function getAddressFromPrivateKey(privateKey) {
-    const wallet = new ethers.Wallet(privateKey);
-    return wallet.address;
-}
-
-// example usage
-async function main(){
-    const documentRegistry = new DocumentRegistryClient();
-    const storeDocument = await documentRegistry.storeDocument("1", "1", "1", OWNERADDRESS);
-    const ids = await documentRegistry.searchDocumentByDocIdAndType("1", "1");
-    console.log(ids);
-}
-
-main();
+module.exports = DocumentRegistryClient;

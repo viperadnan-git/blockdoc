@@ -21,13 +21,19 @@ router.post('/upload', multer({ storage }).single('file'), async (req, res) => {
     const { file } = req;
     const { doc_type, doc_id } = req.body;
     const { id: user_id } = req.user;
-    const document = await db.Document.create({
+    await db.Document.create({
         doc_id,
         doc_type,
         user_id,
         path: file.path,
     });
-    res.status(201).json(document);
+    res.status(201);
+});
+
+router.get('/list', async (req, res) => {
+    const { id: user_id } = req.user;
+    const documents = await db.Document.findAll({ where: { user_id } });
+    res.send(documents);
 });
 
 module.exports = router;

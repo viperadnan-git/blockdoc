@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const db = require('../../../database');
 const config = require('../../../config');
 
 module.exports = (req, res, next) => {
@@ -20,11 +19,8 @@ module.exports = (req, res, next) => {
         if (err) {
             return res.status(401).send({ code: 401, message: 'Failed to authenticate.' });
         }
-        const user = db.User.findOne({ where: { id: decoded.id } });
-        if (!user) {
-            return res.status(404).send({ code: 404, message: 'No user found.' });
-        }
-        req.user = user;
+
+        req.user = decoded;
         return next();
     }
 

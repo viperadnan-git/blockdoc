@@ -9,7 +9,7 @@ const User = require('./models/User')(sequelize);
 const Document = require('./models/Document')(sequelize);
 
 User.hasMany(Document, {
-    foreignKey: 'user',
+    foreignKey: 'user_id',
     as: 'documents',
 });
 
