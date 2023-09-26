@@ -29,11 +29,15 @@ class DocumentRegistryClient {
     }
 
     async fetchDocumentById(docID) {
-        return this.contract.fetchDocumentById(docID);
+        const document = await this.contract.fetchDocumentById(docID);
+        // Parse the result into meaningful fields (assuming you want to use them)
+        const [docType, contentHash, owner, assignee] = document;
+        return { docType, contentHash, owner, assignee };
     }
 
-    async searchDocumentByDocIdAndType(docID, docType) {
-        return this.contract.searchDocumentByDocIdAndType(docID, docType);
+    async searchDocumentByDocIdAndType(docID, docType, contentHash) {
+        const exists = await this.contract.searchDocumentByDocIdAndType(docID, docType, contentHash);
+        return exists;
     }
 
     async editDocument(docID, newDocType, newContentHash) {
@@ -43,30 +47,4 @@ class DocumentRegistryClient {
     }
 }
 
-// Example usage
-async function main() {
-    const documentRegistry = new DocumentRegistryClient();
-    
-    // Store a document
-    const storeDocumentTxHash = await documentRegistry.storeDocument("1", "Invoice", "hash123", "assigneeAddress");
-    console.log(`Transaction hash for storing document: ${storeDocumentTxHash}`);
-
-    // Fetch your document IDs
-    const myDocumentIds = await documentRegistry.fetchMyIds();
-    console.log("My Document IDs:", myDocumentIds);
-
-    // Fetch a document by its ID
-    const docID = myDocumentIds[0]; // Assuming you have at least one document
-    const document = await documentRegistry.fetchDocumentById(docID);
-    console.log("Fetched Document:", document);
-
-    // Search for a document by ID and type
-    const searchResult = await documentRegistry.searchDocumentByDocIdAndType("1", "Invoice");
-    console.log("Search Result:", searchResult);
-
-    // Edit a document
-    const editDocumentTxHash = await documentRegistry.editDocument(docID, "Updated Invoice", "newHash456");
-    console.log(`Transaction hash for editing document: ${editDocumentTxHash}`);
-}
-
-main();
+module.export = DocumentRegistryClient;
