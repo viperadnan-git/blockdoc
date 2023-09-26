@@ -1,24 +1,6 @@
 {
 	"abi": [
 		{
-			"inputs": [],
-			"stateMutability": "nonpayable",
-			"type": "constructor"
-		},
-		{
-			"inputs": [],
-			"name": "admin",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
 			"inputs": [
 				{
 					"internalType": "string",
@@ -40,7 +22,7 @@
 			"inputs": [
 				{
 					"internalType": "string",
-					"name": "_docID",
+					"name": "_contentHash",
 					"type": "string"
 				},
 				{
@@ -62,8 +44,77 @@
 		{
 			"inputs": [
 				{
+					"internalType": "address",
+					"name": "_userAddr",
+					"type": "address"
+				},
+				{
 					"internalType": "string",
-					"name": "_docId",
+					"name": "_roleType",
+					"type": "string"
+				}
+			],
+			"name": "grantRole",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_docID",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_docType",
+					"type": "string"
+				},
+				{
+					"internalType": "string",
+					"name": "_contentHash",
+					"type": "string"
+				},
+				{
+					"internalType": "address",
+					"name": "_owner",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_creator",
+					"type": "address"
+				}
+			],
+			"name": "storeDocument",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"stateMutability": "nonpayable",
+			"type": "constructor"
+		},
+		{
+			"inputs": [],
+			"name": "admin",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_contentHash",
 					"type": "string"
 				}
 			],
@@ -109,29 +160,6 @@
 		{
 			"inputs": [
 				{
-					"internalType": "address",
-					"name": "_userAddr",
-					"type": "address"
-				},
-				{
-					"internalType": "string",
-					"name": "_roleType",
-					"type": "string"
-				}
-			],
-			"name": "grantRole",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "string",
-					"name": "_docID",
-					"type": "string"
-				},
-				{
 					"internalType": "string",
 					"name": "_docType",
 					"type": "string"
@@ -152,40 +180,6 @@
 			],
 			"stateMutability": "view",
 			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "string",
-					"name": "_docID",
-					"type": "string"
-				},
-				{
-					"internalType": "string",
-					"name": "_docType",
-					"type": "string"
-				},
-				{
-					"internalType": "string",
-					"name": "_contentHash",
-					"type": "string"
-				},
-				{
-					"internalType": "address",
-					"name": "_owner",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "_creator",
-					"type": "address"
-				}
-			],
-			"name": "storeDocument",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
 		}
 	]
 }
-

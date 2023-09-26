@@ -40,7 +40,7 @@ contract DocumentRegistry {
     ) external {
         require(users[_owner].addr == _owner, "Owner doesn't exist");
         require(users[_creator].addr == _creator, "Creator doesn't exist");
-        documents[_docID] = Document({
+        documents[_contentHash] = Document({
             docType: _docType,
             contentHash: _contentHash,
             owner: _owner,
@@ -63,14 +63,14 @@ contract DocumentRegistry {
         return documentsCreatedByUser[msg.sender];
     }
 
-    function fetchDocumentById(string memory _docId) external view returns (string memory, string memory, address, address) {
-        Document storage doc = documents[_docId];
+    function fetchDocumentById(string memory _contentHash) external view returns (string memory, string memory, address, address) {
+        Document storage doc = documents[_contentHash];
         require(doc.owner == msg.sender, "You don't own this document");
         return (doc.docType, doc.contentHash, doc.owner, doc.creator);
     }
 
-    function searchDocumentByDocIdAndType(string memory _docID, string memory _docType, string memory _contentHash) external view returns (bool) {
-        Document storage doc = documents[_docID];
+    function searchDocumentByDocIdAndType(string memory _docType, string memory _contentHash) external view returns (bool) {
+        Document storage doc = documents[_contentHash];
         if (
             keccak256(abi.encodePacked(doc.docType)) == keccak256(abi.encodePacked(_docType)) &&
             keccak256(abi.encodePacked(doc.contentHash)) == keccak256(abi.encodePacked(_contentHash))
@@ -81,10 +81,10 @@ contract DocumentRegistry {
         return false; 
     }
 
-    function editDocument(string memory _docID, string memory _newDocType, string memory _newContentHash)
+    function editDocument(string memory _contentHash, string memory _newDocType, string memory _newContentHash)
         external
     {
-        Document storage doc = documents[_docID];
+        Document storage doc = documents[_contentHash];
         require(doc.owner == msg.sender, "You don't own this document and can't edit");
         doc.docType = _newDocType;
         doc.contentHash = _newContentHash;

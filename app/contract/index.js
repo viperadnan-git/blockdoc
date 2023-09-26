@@ -18,10 +18,10 @@ class DocumentRegistryClient {
     }
 
     async storeDocument(docID, docType, contentHash, creator, owner) {
-        const tx = await this.contract.storeDocument(docID, docType, contentHash, (owner && creator), creator);
+        const tx = await this.contract.storeDocument(docID, docType, contentHash, owner, creator);
         await tx.wait();
         return tx.hash;
-    }
+    }    
 
     async fetchMyIds(privateKey) {
         const wallet = new ethers.Wallet(privateKey, this.provider);
@@ -30,24 +30,24 @@ class DocumentRegistryClient {
         return ids;
     }
 
-    async fetchDocumentById(docID, privateKey) {
+    async fetchDocumentById(contentHash, privateKey) {
         const wallet = new ethers.Wallet(privateKey, this.provider);
         const contract = new ethers.Contract(this.contractAddress, abi, wallet);
-        const document = await contract.fetchDocumentById(docID);
-        const [docType, contentHash, owner, assignee] = document;
-        return { docType, contentHash, owner, assignee };
-    }
+        const document = await contract.fetchDocumentById(contentHash);
+        const [docType, contentHash, owner, creator] = document;
+        return { docType, contentHash, owner, creator };
+    }    
 
-    async searchDocumentByDocIdAndType(docID, docType, contentHash) {
-        const exists = await this.contract.searchDocumentByDocIdAndType(docID, docType, contentHash);
+    async searchDocumentByDocIdAndType(docType, contentHash) {
+        const exists = await this.contract.searchDocumentByDocIdAndType(docType, contentHash);
         return exists;
-    }
+    }    
 
-    async editDocument(docID, newDocType, newContentHash) {
-        const tx = await this.contract.editDocument(docID, newDocType, newContentHash);
+    async editDocument(contentHash, newDocType, newContentHash) {
+        const tx = await this.contract.editDocument(contentHash, newDocType, newContentHash);
         await tx.wait();
         return tx.hash;
-    }
+    }    
 
     async createUser(name, addr) {
         const tx = await this.contract.createUser(name, addr);
