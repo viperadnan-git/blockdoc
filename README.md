@@ -35,6 +35,9 @@ The existing legal record management system is not efficient in court proceeding
 
 6. **KYC as a Service**: Utilize existing databases for user authentication and provide a secure service for legal document verification without exposing user data.
 
+![[FLow Chart]](https://i0.wp.com/i.ibb.co/THnnMms/Whats-App-Image-2023-09-26-at-13-59-35.jpg)
+![[Roadmap]](https://i0.wp.com/i.ibb.co/YWdDwsL/roadmap.jpg)
+
 ## Project Structure
 
 The project is organized into three main components:
